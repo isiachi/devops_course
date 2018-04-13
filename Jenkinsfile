@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps{
-                checkout scm
+                sh 'git checkout ${BRANCH_NAME}'
             }
         }
         stage('Release') {
@@ -12,7 +12,7 @@ pipeline {
                 DOCKER_REPOSITORY = 'isiachi'
             }
             steps {
-                sh 'sbt release'
+                sh 'sbt "release with-defaults"'
             }
         }
     }
