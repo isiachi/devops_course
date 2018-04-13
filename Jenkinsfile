@@ -7,7 +7,7 @@ pipeline {
             }
         }
         stage('Release') {
-            when { branch 'master' }
+            when {allOf {branch 'master'; not {changeRequest author: 'Jenkins'}}}
             environment {
                 DOCKER_REPOSITORY = 'isiachi'
             }
