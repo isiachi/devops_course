@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout SCM') {
+        stage('Branch checkout') {
             steps{
                 sh 'git checkout ${BRANCH_NAME}'
             }
@@ -12,7 +12,12 @@ pipeline {
                 DOCKER_REPOSITORY = 'isiachi'
             }
             steps {
-                sh 'sbt "release with-defaults"'
+                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'USER', passwordVariable: 'PSW')]) {
+                    sh 'docker login -u ${USER} -p ${PSW}'
+                }
+                sshagent (credentials: ['GitHub']) {
+                    sh 'sbt "release with-defaults"'
+                }
             }
         }
     }
